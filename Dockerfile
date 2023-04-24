@@ -29,5 +29,5 @@ COPY --from=builder /app/build /usr/share/nginx/html
 ## npm run build ile Esasen, tüm JavaScript dosyalarını alır, hepsini birlikte işler, hepsini tek bir dosyada(build klasörü) bir araya getirir
 
 
-
+# UYGULAMANIN SON İŞLEMİ **** TRAVİSDEN SONRA BU
 ## Normalde travis.yaml dosyasından sonra bitiyordu tüm işlemler ama, travis portu alamıyormuş o yüzden expose 80 diye gösterdik.
