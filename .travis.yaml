@@ -1,19 +1,45 @@
-sudo : required
+sudo: required
 services:
   - docker
 
 before_install:
-  - docker build -f -t cuneytercel23/dakirayze Dockerfile.dev .  
+  - docker build -f -t cuneytercel23/dakirayze Dockerfile.dev .
 
 script:
-  - docker run -e CI =true cuneytercel23/dakirayze npm run test 
+  - docker run -e CI =true cuneytercel23/dakirayze npm run test
 
 
-
-
+  # önce githubdaki projemizi, travisCI dashboardundaki işlemlerle birleştiriyoruz.(7. bölümdeki videolarda var ben yapmadım.)
 
   # sudo : required -> biz süper kullanıcıyız demek.
   # services kısımı -> şuanda çalışan docker'ı kopyala (travisyaml fotosundaki 1.adım )
   # before kısımı -> Dockerfile.dev image'ını oluştur (travis yaml fotosundaki 2. adım), -t kısımı random id yerine, image isimi veriyoruz.
   # script kısımı -> (travisyamldaki test kısımı), e-CI=true demek = test bittikten sonra, testi kapatmamız gerek ve testi bu kod ile kapatıyoruz.
-  
+
+  #Bu kısımdan sonra aws girerek, elastic beanstalk(monolith için uygun, microservice için ne uygun onu şuan bilmiyorum.) denen şeyi kullandık.(ben yapmıyorum.) 89-90 video
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-west-2"
+  app: "awsde uygulama ismini ne yaptıysan o"
+  env: "awsde docker env oluşturma kısmı var oradaki isim buraya girilecek docker-env videoda"
+  bucket_name: "aws de bucketlara giriyoruz ve elasticbeanstalk us-west2 ile başlayanı alıyoruz."
+  bucket_path: "app name ile aynı."
+  on: 
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: "$AWS_SECRET_KEY"
+
+
+    ## deploy kısmı anlaşılır, string içine yazdıklarım gerçektende stringle veriliyor.
+    ## sadece on: branch kısımı ->  mastera kod güncellemesi gelirse, deploy et.   
+
+    ## daha sonra , aws de IAM de kullanıcı oluşturuyoruz, policies kısmına da full access diyoruz.
+    ## ondan sonra aws bize access id ve secret key veriyor.
+    ## daha sonra travise geçiyoruz settings kısmından, environment variables kısmından key ve secret oluşturucaz.
+    ## sol kısma AWS_ACCESS_KEY diyip sağ kısıma awsden gelen acces id yi giriyoruz ve ekliyoruz.
+    ## sol kısıma AWS_SECRET_KEY diyip sağ kısıma awsden gelen secretkeyi giriyoruz ve ekliyoruz.
+
+    ## soldaki AWS_ACCESS_KEY ve AWS_SECRET_KEY ismini biz verdik fakat oradaki verdiğimiz isimleri ..
+    #access_key_id: $AWS_ACCESS_KEY
+    #secret_access_key: "$AWS_SECRET_KEY" kısımlarıyla aynı yapmalıyız.
