@@ -1,0 +1,44 @@
+FROM node:16-alpine
+
+WORKDIR '/app'
+
+COPY package.json .
+RUN npm install
+
+COPY . .
+
+CMD [ "npm", "run", "start" ]
+
+
+##.dev olmasının sebebi, sadece development'da kullanıcaz.
+## productionda kullandığımızda direk düz Dockerfile oluyor.
+
+
+## Normalde docker build . ile image oluştururuz ya buna böyle yapınca çalışmıyor.
+## Bunu çalıştırmak için docker build -f Dockerfile.dev . yaparak build edebiliyorum.
+## create react app yaptığım için nodemodules falan hep birlikte geldi, ayrıca docker indirdiği için nodemodules dosyasını sildik duplication olmasın diye.
+
+
+##Docker Volumes(birimler) (Önemli)
+# Şimdi en başta copy ile package.json alıp kopyalıyoruz containere.
+# daha sonra işte npm install dan sonra, diğer tüm dosyaları alıp containere kopyalıyoruz. 
+# en sonda da src public ve diğer dosyaları alıp kopyalıyoruz.
+# ama bu dosyaları kopyalarken fs snapshot(daha önce yüz kere gördüm :)) ile ss alarak kopyalıyoruz.
+# Buda demek oluyor ki, herhangi bir güncelleme olduğu zaman, değişiklik güncellenmeyecek çünkü ss var yani orada. 
+# Ve bu değişiklikleri almamız için bu kopyalama(ss) mantığından uzaklaşmamız gerekiyor.
+
+##Docker Volume devam ..
+# Komut kullanarak, docker'ın volume özelliğini kullancaz.  
+# Ss almak yerine yertutucu(placeholder) koyacağız container'ın içine ve bu yertutucular her dosya'ya özel referans bağlantı kuracaklar. böylece değişiklikleri alabilecez.(mantığı çok önemli değil bu işe yarıyor onu bilmek lazım)
+# volume ve novolume olan sslerden bakarakda pekiştirebilirsin.
+# Ek olarak, nodemodules sildim, diye orada sıkıntı oluyor onada path vererek çözüyorum.
+
+## Docker volume komutu
+#docker run -p 3000:3000 -v /app/node_modules -v $(pwd) <imageid>
+# ilk -v olan yer, nodemodules mevzusunu kurtarıyor. diğeri ise pwd(şuanki olduğumuz directory) container'daki /app i geziyor ve mapliyor işte.
+
+## Yukarıdaki gibi çok uzun bir docker run ..... yazacağımıza docker-compose açarak şimdi işimizi kısaltıcaz.
+
+
+##Bu arada, docker run <imageid> veriyoruz, ya cmd de npm run start var ..
+## docker exec -it <imageid> npm run test  dersek, o zamanda test çalışır :)

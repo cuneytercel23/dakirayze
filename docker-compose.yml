@@ -1,0 +1,46 @@
+version: '3'
+services:
+  web: 
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - /app/node_modules
+      - .:/app
+  tests: 
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - /app/node_modules
+      - .:/app 
+    command: ["npm", "run", "test"]
+
+
+
+## docker-compose up --build yaparak, hem normal mod(dockerfiledaki) hemde, test mode  calısıyor. web ve tests bizim servislerimiz ve isimlerini kafamıza göre veriyoruz.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## build = kısmında context : . , . demek şuanki dosya dizini demek, dockerfile dosyası da sonunda .dev olduğu için direkt dosya ismi verdik. eğer uzantısı olmasaydı, build : . der bırakırrdık.
+## volumes kısmında ilki, dockerfilede aşağıda anlattığım,  -v ile başlayan nodemodules olayını halletmek.
+## birinci kısımı yaparak run ederken -v /app/node_modules yazısından kurtuluyoruz.
+## volumes kısmında ikincisi, dockerfilede aşağıda anlattığım, '.' şuanki dosya dizinini belirtiyor, /app ise container'daki app dosyasını belirtiyor. ve bunları eşitliyoruz.
+## 2. kısımı da yaparak  run ederken  -v /app/node_modules -v $(pwd) kodundan kurtuluyoruz. 
+## yani sadece docker run -p 3000:3000 -v /app/node_modules -v $(pwd) <imageid> yazmak yerine.. 
+## docker compose up yazıyoruz bitiyor. :))
