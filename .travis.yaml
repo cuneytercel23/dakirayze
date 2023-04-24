@@ -43,3 +43,5 @@ deploy:
     ## soldaki AWS_ACCESS_KEY ve AWS_SECRET_KEY ismini biz verdik fakat oradaki verdiğimiz isimleri ..
     #access_key_id: $AWS_ACCESS_KEY
     #secret_access_key: "$AWS_SECRET_KEY" kısımlarıyla aynı yapmalıyız.
+
+    ## bundan sonra pushlayınca oluyr her şey kendiliğinden.

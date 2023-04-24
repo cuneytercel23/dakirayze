@@ -8,6 +8,7 @@ RUN npm run build
 # builder isim olarak biz verdik nginx'i kullanarak ondan copyalama yapıcaz.
 
 FROM nginx
+EXPOSE 80
 COPY --from=builder /app/build /usr/share/nginx/html
 
 
@@ -29,4 +30,4 @@ COPY --from=builder /app/build /usr/share/nginx/html
 
 
 
-
+## Normalde travis.yaml dosyasından sonra bitiyordu tüm işlemler ama, travis portu alamıyormuş o yüzden expose 80 diye gösterdik.
