@@ -1,0 +1,19 @@
+sudo : required
+services:
+  - docker
+
+before_install:
+  - docker build -f -t cuneytercel23/dakirayze Dockerfile.dev .  
+
+script:
+  - docker run -e CI =true cuneytercel23/dakirayze npm run test 
+
+
+
+
+
+  # sudo : required -> biz süper kullanıcıyız demek.
+  # services kısımı -> şuanda çalışan docker'ı kopyala (travisyaml fotosundaki 1.adım )
+  # before kısımı -> Dockerfile.dev image'ını oluştur (travis yaml fotosundaki 2. adım), -t kısımı random id yerine, image isimi veriyoruz.
+  # script kısımı -> (travisyamldaki test kısımı), e-CI=true demek = test bittikten sonra, testi kapatmamız gerek ve testi bu kod ile kapatıyoruz.
+  
